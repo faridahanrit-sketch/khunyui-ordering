@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>แก้ไขเมนู | คุณยุ้ย ส้มตำครกระเบิด</title>
+<style>
+:root {
+  --brand-red:#D52228;
+  --brand-red-soft:#FFF3F3;
+  --text:#171717;
+  --muted:#6B6B6B;
+  --line-soft:#E9E9E9;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%;background:#fff}
+body{margin:0;color:var(--text);font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.app-screen{display:block;min-height:100vh;min-height:100dvh}
+
+/* =========================
+   SCREEN 06.1 — MENU EDIT
+========================= */
+.menu-edit-screen {
+  min-height:100vh;
+  min-height:100dvh;
+  background:#fff;
+}
+.menu-edit-topbar {
+  position:sticky;
+  top:0;
+  z-index:28;
+  background:rgba(255,255,255,.98);
+  border-bottom:1px solid var(--line-soft);
+  backdrop-filter:blur(10px);
+}
+.menu-edit-topbar-inner {
+  width:min(100%,760px);
+  min-height:60px;
+  margin:0 auto;
+  padding:8px 14px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+}
+.menu-edit-back {
+  min-height:44px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#2F2F2F;
+  padding:8px 10px 8px 4px;
+  font-size:14px;
+  font-weight:700;
+}
+.menu-edit-back:hover { background:#F6F6F6; }
+.menu-edit-title {
+  margin:0;
+  text-align:center;
+  font-size:17px;
+  line-height:1.4;
+  font-weight:800;
+}
+.menu-edit-topbar-spacer {
+  width:105px;
+}
+
+.menu-edit-main {
+  width:min(100%,760px);
+  margin:0 auto;
+  padding:20px 18px 42px;
+}
+.menu-edit-loading {
+  min-height:360px;
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+  font-size:13px;
+}
+.menu-edit-load-error {
+  min-height:340px;
+  display:none;
+  place-items:center;
+  padding:28px 18px;
+  text-align:center;
+}
+.menu-edit-load-error.is-visible { display:grid; }
+.menu-edit-load-error-title {
+  margin:0;
+  font-size:16px;
+  line-height:1.45;
+  font-weight:760;
+}
+.menu-edit-load-error-sub {
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+.menu-edit-retry {
+  min-width:120px;
+  min-height:46px;
+  margin-top:18px;
+  border:0;
+  border-radius:9px;
+  background:var(--brand-red);
+  color:#fff;
+  font-weight:720;
+}
+.menu-edit-form[hidden] { display:none !important; }
+
+.menu-image-section {
+  display:grid;
+  justify-items:center;
+  margin-bottom:28px;
+}
+.menu-image-preview {
+  width:min(100%,430px);
+  aspect-ratio:4/3;
+  overflow:hidden;
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  background:#F5F5F5;
+  display:grid;
+  place-items:center;
+  color:#8A8A8A;
+  font-size:13px;
+}
+.menu-image-preview img {
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+.menu-image-change {
+  min-height:42px;
+  margin-top:10px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:var(--brand-red);
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:740;
+}
+.menu-image-change:hover { background:var(--brand-red-soft); }
+
+.menu-form-group {
+  margin-top:18px;
+}
+.menu-form-label {
+  display:block;
+  margin-bottom:7px;
+  color:#303030;
+  font-size:13px;
+  line-height:1.4;
+  font-weight:700;
+}
+.menu-form-input,
+.menu-form-select,
+.menu-form-textarea {
+  width:100%;
+  border:1px solid #DDDDDD;
+  border-radius:10px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-size:14px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.menu-form-input,
+.menu-form-select {
+  height:50px;
+  padding:0 13px;
+}
+.menu-form-textarea {
+  min-height:112px;
+  padding:12px 13px;
+  resize:vertical;
+  line-height:1.55;
+}
+.menu-form-input:focus,
+.menu-form-select:focus,
+.menu-form-textarea:focus {
+  border-color:var(--brand-red);
+  box-shadow:0 0 0 3px rgba(213,34,40,.12);
+}
+.menu-form-input[aria-invalid="true"],
+.menu-form-select[aria-invalid="true"] {
+  border-color:#B42318;
+}
+.menu-field-error {
+  min-height:18px;
+  margin:5px 0 0;
+  color:#B42318;
+  font-size:12px;
+  line-height:1.4;
+}
+.menu-price-control {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+.menu-price-suffix {
+  color:#555;
+  font-size:13px;
+}
+
+.menu-sale-status {
+  min-height:58px;
+  padding:0 2px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.menu-sale-status-label {
+  font-size:13px;
+  font-weight:700;
+}
+.menu-sale-status-control {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.menu-sale-status-text {
+  min-width:48px;
+  color:#555;
+  font-size:12.5px;
+  text-align:right;
+}
+.menu-edit-switch {
+  position:relative;
+  width:48px;
+  height:28px;
+  border:0;
+  border-radius:999px;
+  background:#D7D7D7;
+  padding:0;
+}
+.menu-edit-switch[aria-checked="true"] {
+  background:var(--brand-red);
+}
+.menu-edit-switch::after {
+  content:"";
+  position:absolute;
+  top:4px;
+  left:4px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.18);
+  transition:transform .15s ease;
+}
+.menu-edit-switch[aria-checked="true"]::after {
+  transform:translateX(20px);
+}
+
+.menu-options-box {
+  border:1px solid var(--line-soft);
+  border-radius:12px;
+  overflow:hidden;
+}
+.menu-option-group {
+  padding:13px 14px;
+  border-top:1px solid var(--line-soft);
+}
+.menu-option-group:first-child { border-top:0; }
+.menu-option-group-name {
+  margin:0;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:760;
+}
+.menu-option-values {
+  margin-top:7px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.menu-option-chip {
+  display:inline-flex;
+  min-height:28px;
+  align-items:center;
+  padding:4px 9px;
+  border-radius:999px;
+  background:#F5F5F5;
+  color:#555;
+  font-size:11.5px;
+  line-height:1.3;
+}
+.menu-options-empty {
+  padding:14px;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.5;
+}
+.menu-options-note {
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.5;
+}
+
+.menu-code-box {
+  min-height:46px;
+  padding:12px 13px;
+  border:1px solid var(--line-soft);
+  border-radius:10px;
+  background:#F8F8F8;
+  color:#555;
+  font-size:13px;
+  line-height:1.4;
+  word-break:break-word;
+}
+
+.menu-save-error {
+  display:none;
+  margin-top:20px;
+  padding:13px 14px;
+  border:1px solid #F5D2CF;
+  border-radius:10px;
+  background:#FFF5F4;
+  color:#9D3027;
+}
+.menu-save-error.is-visible { display:block; }
+.menu-save-error-title {
+  margin:0;
+  font-size:13px;
+  font-weight:760;
+}
+.menu-save-error-sub {
+  margin:4px 0 0;
+  font-size:12.5px;
+  line-height:1.45;
+}
+.menu-save-retry {
+  min-height:40px;
+  margin-top:10px;
+  border:1px solid #E7BBB7;
+  border-radius:8px;
+  background:#fff;
+  color:#963229;
+  padding:7px 11px;
+  font-size:12.5px;
+  font-weight:720;
+}
+
+.menu-edit-actions {
+  margin-top:26px;
+  display:grid;
+  gap:9px;
+}
+.menu-save-button {
+  width:100%;
+  min-height:52px;
+  border:0;
+  border-radius:10px;
+  background:var(--brand-red);
+  color:#fff;
+  font-size:14px;
+  font-weight:790;
+}
+.menu-save-button:hover:not(:disabled) { background:#BB1C22; }
+.menu-save-button:disabled {
+  opacity:.6;
+  cursor:wait;
+}
+.menu-cancel-button {
+  min-height:44px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#555;
+  font-size:13px;
+  font-weight:720;
+}
+.menu-cancel-button:hover { background:#F7F7F7; }
+
+.menu-edit-status-message {
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  z-index:65;
+  transform:translateX(-50%) translateY(12px);
+  max-width:calc(100% - 28px);
+  padding:10px 14px;
+  border:1px solid #DCEDE3;
+  border-radius:10px;
+  background:#F4FBF7;
+  color:#176A42;
+  box-shadow:0 6px 22px rgba(0,0,0,.08);
+  font-size:13px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .16s ease, transform .16s ease;
+}
+.menu-edit-status-message.is-visible {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:520px) {
+  .menu-edit-topbar-inner {
+    padding-left:8px;
+    grid-template-columns:auto minmax(0,1fr) 72px;
+  }
+  .menu-edit-topbar-spacer { width:72px; }
+  .menu-edit-main { padding:16px 14px 32px; }
+  .menu-image-preview { width:100%; }
+}
+
+
+/* SCREEN 06.1 — customer preview inside edit form */
+.menu-edit-preview-toggle{
+  width:100%;min-height:44px;margin-top:10px;border:1px solid #dedede;border-radius:10px;
+  background:#fff;color:#333;font-size:13px;font-weight:740
+}
+.menu-edit-preview-toggle[aria-expanded="true"]{
+  border-color:#efc9cb;background:var(--brand-red-soft);color:var(--brand-red)
+}
+.menu-edit-customer-preview{
+  display:none;margin-top:14px;padding:12px;border:1px solid var(--line-soft);
+  border-radius:14px;background:#fafafa
+}
+.menu-edit-customer-preview.is-visible{display:block}
+.menu-edit-customer-preview-label{
+  margin:0 0 10px;color:#666;font-size:11.5px;line-height:1.4;font-weight:700
+}
+.menu-edit-preview-card{
+  display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:center;
+  border:1px solid var(--line-soft);border-radius:14px;background:#fff;padding:8px
+}
+.menu-edit-preview-media{
+  width:104px;height:104px;border-radius:12px;overflow:hidden;background:#f2f2f2;
+  display:grid;place-items:center;position:relative;color:#888;font-size:11px
+}
+.menu-edit-preview-media img{
+  width:100%;height:100%;object-fit:cover;display:block
+}
+.menu-edit-preview-sold{
+  display:none;position:absolute;left:6px;right:6px;bottom:6px;padding:5px 6px;
+  border-radius:8px;background:rgba(20,20,20,.82);color:#fff;text-align:center;
+  font-size:10.5px;font-weight:750
+}
+.menu-edit-preview-card.is-unavailable .menu-edit-preview-sold{display:block}
+.menu-edit-preview-card.is-unavailable img{opacity:.55;filter:grayscale(.15)}
+.menu-edit-preview-info{min-width:0}
+.menu-edit-preview-name{
+  font-size:18px;line-height:1.3;font-weight:760;color:#171717;overflow-wrap:anywhere
+}
+.menu-edit-preview-price{
+  margin-top:5px;color:var(--brand-red);font-size:17px;line-height:1.25;font-weight:760
+}
+.menu-edit-preview-status{
+  margin-top:9px;color:#666;font-size:12px;line-height:1.4
+}
+.menu-edit-sync-note{
+  margin-top:12px;padding:10px 12px;border-radius:10px;background:#f7f7f7;
+  color:#555;font-size:11.5px;line-height:1.5
+}
+.menu-food-card.is-just-updated{
+  border-color:#e8aeb1;
+  box-shadow:0 0 0 3px rgba(213,34,40,.08),0 3px 14px rgba(0,0,0,.035)
+}
+@media(max-width:420px){
+  .menu-edit-preview-card{grid-template-columns:88px minmax(0,1fr)}
+  .menu-edit-preview-media{width:88px;height:88px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- SCREEN 06.1 -->
+<section class="app-screen menu-edit-screen" id="screenMenuEdit" aria-labelledby="menuEditTitle">
+  <header class="menu-edit-topbar">
+    <div class="menu-edit-topbar-inner">
+      <button class="menu-edit-back" id="menuEditBackButton" type="button">‹ จัดการเมนู</button>
+      <h1 class="menu-edit-title" id="menuEditTitle">แก้ไขเมนู</h1>
+      <div class="menu-edit-topbar-spacer" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main class="menu-edit-main">
+    <div class="menu-edit-loading" id="menuEditLoading">กำลังโหลด</div>
+
+    <div class="menu-edit-load-error" id="menuEditLoadError">
+      <div>
+        <p class="menu-edit-load-error-title" id="menuEditLoadErrorTitle">ไม่สามารถโหลดเมนูได้</p>
+        <p class="menu-edit-load-error-sub" id="menuEditLoadErrorSub">กรุณาลองอีกครั้ง</p>
+        <button class="menu-edit-retry" id="menuEditLoadRetry" type="button">ลองอีกครั้ง</button>
+      </div>
+    </div>
+
+    <form class="menu-edit-form" id="menuEditForm" novalidate hidden>
+      <section class="menu-image-section" aria-labelledby="menuImageLabel">
+        <div class="menu-image-preview" id="menuImagePreview">
+          <span id="menuImagePlaceholder">ไม่มีภาพ</span>
+          <img id="menuImagePreviewImg" alt="" hidden>
+        </div>
+
+        <input id="menuImageFile" type="file" accept="image/*" hidden>
+        <button class="menu-image-change" id="menuImageChangeButton" type="button">
+          เปลี่ยนรูปภาพ
+        </button>
+      </section>
+
+
+      <button class="menu-edit-preview-toggle" id="menuEditPreviewToggle"
+        type="button" aria-expanded="false" aria-controls="menuEditCustomerPreview">
+        ดูตัวอย่างแบบลูกค้า
+      </button>
+
+      <div class="menu-edit-customer-preview" id="menuEditCustomerPreview">
+        <p class="menu-edit-customer-preview-label">
+          ตัวอย่างก่อนบันทึก — ลูกค้าจริงจะเห็นค่าหลังบันทึกสำเร็จ
+        </p>
+
+        <div class="menu-edit-preview-card" id="menuEditPreviewCard">
+          <div class="menu-edit-preview-media">
+            <span id="menuEditPreviewPlaceholder">ไม่มีภาพ</span>
+            <img id="menuEditPreviewImage" alt="" hidden>
+            <span class="menu-edit-preview-sold">หมดชั่วคราว</span>
+          </div>
+
+          <div class="menu-edit-preview-info">
+            <div class="menu-edit-preview-name" id="menuEditPreviewName">—</div>
+            <div class="menu-edit-preview-price" id="menuEditPreviewPrice">฿0</div>
+            <div class="menu-edit-preview-status" id="menuEditPreviewStatus">เปิดขาย</div>
+          </div>
+        </div>
+
+        <div class="menu-edit-sync-note">
+          เมื่อกดบันทึก ชื่อ ราคา ภาพ หมวด รายละเอียด และสถานะขายจะบันทึกลงข้อมูลเมนูชุดเดียวกับที่ Customer Preview ใช้
+        </div>
+      </div>
+
+      <div class="menu-form-group">
+        <label class="menu-form-label" for="menuEditName">ชื่อเมนู</label>
+        <input class="menu-form-input" id="menuEditName" name="name"
+          type="text" autocomplete="off" maxlength="160"
+          aria-describedby="menuEditNameError">
+        <p class="menu-field-error" id="menuEditNameError"></p>
+      </div>
+
+      <div class="menu-form-group">
+        <label class="menu-form-label" for="menuEditPrice">ราคา</label>
+        <div class="menu-price-control">
+          <input class="menu-form-input" id="menuEditPrice" name="price"
+            type="text" inputmode="decimal" autocomplete="off"
+            aria-describedby="menuEditPriceError">
+          <span class="menu-price-suffix">บาท</span>
+        </div>
+        <p class="menu-field-error" id="menuEditPriceError"></p>
+      </div>
+
+      <div class="menu-form-group">
+        <label class="menu-form-label" for="menuEditCategory">หมวดเมนู</label>
+        <select class="menu-form-select" id="menuEditCategory" name="category"
+          aria-describedby="menuEditCategoryError">
+          <option value="ส้มตำ">ส้มตำ</option>
+          <option value="ยำ">ยำ</option>
+          <option value="ส้มตำพิเศษ">ส้มตำพิเศษ</option>
+          <option value="ตำเส้นเล็ก / ไหลบัวพิเศษ">ตำเส้นเล็ก / ไหลบัวพิเศษ</option>
+          <option value="ยำพิเศษ">ยำพิเศษ</option>
+          <option value="เกาเหลา">เกาเหลา</option>
+          <option value="เครื่องเคียง/ของเพิ่ม">เครื่องเคียง/ของเพิ่ม</option>
+        </select>
+        <p class="menu-field-error" id="menuEditCategoryError"></p>
+      </div>
+
+      <div class="menu-form-group">
+        <span class="menu-form-label">สถานะการขาย</span>
+        <div class="menu-sale-status">
+          <span class="menu-sale-status-label">ความพร้อมขาย</span>
+
+          <div class="menu-sale-status-control">
+            <span class="menu-sale-status-text" id="menuEditAvailabilityText">เปิดขาย</span>
+            <button class="menu-edit-switch" id="menuEditAvailability" type="button"
+              role="switch" aria-checked="true" aria-label="สถานะการขาย"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-form-group">
+        <span class="menu-form-label">ตัวเลือกของเมนู</span>
+        <div class="menu-options-box" id="menuEditOptions"></div>
+        <p class="menu-options-note">
+          แสดงเฉพาะตัวเลือกที่ผูกกับเมนูนี้อยู่แล้ว ไม่มีการสร้างตัวเลือกใหม่จากหน้านี้
+        </p>
+      </div>
+
+      <div class="menu-form-group">
+        <label class="menu-form-label" for="menuEditDescription">
+          รายละเอียดเมนู
+        </label>
+        <textarea class="menu-form-textarea" id="menuEditDescription"
+          name="description" maxlength="1000"></textarea>
+      </div>
+
+      <div class="menu-form-group">
+        <span class="menu-form-label">รหัสเมนู</span>
+        <div class="menu-code-box" id="menuEditCode" aria-label="รหัสเมนู">—</div>
+      </div>
+
+      <div class="menu-save-error" id="menuEditSaveError" role="alert">
+        <p class="menu-save-error-title">บันทึกไม่สำเร็จ</p>
+        <p class="menu-save-error-sub">กรุณาลองอีกครั้ง</p>
+        <button class="menu-save-retry" id="menuEditSaveRetry" type="button">
+          ลองบันทึกอีกครั้ง
+        </button>
+      </div>
+
+      <div class="menu-edit-actions">
+        <button class="menu-save-button" id="menuEditSaveButton" type="submit">
+          บันทึกการเปลี่ยนแปลง
+        </button>
+        <button class="menu-cancel-button" id="menuEditCancelButton" type="button">
+          ยกเลิก
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <div class="menu-edit-status-message" id="menuEditStatusMessage"
+    role="status" aria-live="polite" aria-atomic="true"></div>
+</section>
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const CONFIG = Object.freeze({
+  SUPABASE_URL:"https://mpxxarmidmpamnfzdwdi.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY:"sb_publishable_jfdNhtPCWpxjCGccoON2mw_gJqNzrs3",
+  STORE_ID:"11111111-1111-4111-8111-111111111111",
+  MENU_TABLE:"menu_items",
+  MENU_IMAGES_BUCKET:"menu-images"
+});
+
+const ALLOWED_CATEGORIES = [
+  "ส้มตำ",
+  "ยำ",
+  "ส้มตำพิเศษ",
+  "ตำเส้นเล็ก / ไหลบัวพิเศษ",
+  "ยำพิเศษ",
+  "เกาเหลา",
+  "เครื่องเคียง/ของเพิ่ม"
+];
+
+let supabase=null;
+let storeId=null;
+let currentMenuId=new URLSearchParams(location.search).get("menu");
+let currentMenu=null;
+let pendingImageFile=null;
+let pendingImageObjectUrl=null;
+let statusTimer=null;
+
+const E={
+  loading:document.getElementById("menuEditLoading"),
+  loadError:document.getElementById("menuEditLoadError"),
+  loadErrorTitle:document.getElementById("menuEditLoadErrorTitle"),
+  loadErrorSub:document.getElementById("menuEditLoadErrorSub"),
+  loadRetry:document.getElementById("menuEditLoadRetry"),
+  form:document.getElementById("menuEditForm"),
+  imageFile:document.getElementById("menuImageFile"),
+  imageButton:document.getElementById("menuImageChangeButton"),
+  imagePlaceholder:document.getElementById("menuImagePlaceholder"),
+  imagePreview:document.getElementById("menuImagePreviewImg"),
+  name:document.getElementById("menuEditName"),
+  nameError:document.getElementById("menuEditNameError"),
+  price:document.getElementById("menuEditPrice"),
+  priceError:document.getElementById("menuEditPriceError"),
+  category:document.getElementById("menuEditCategory"),
+  categoryError:document.getElementById("menuEditCategoryError"),
+  availability:document.getElementById("menuEditAvailability"),
+  availabilityText:document.getElementById("menuEditAvailabilityText"),
+  options:document.getElementById("menuEditOptions"),
+  description:document.getElementById("menuEditDescription"),
+  code:document.getElementById("menuEditCode"),
+  saveError:document.getElementById("menuEditSaveError"),
+  saveRetry:document.getElementById("menuEditSaveRetry"),
+  saveButton:document.getElementById("menuEditSaveButton"),
+  cancel:document.getElementById("menuEditCancelButton"),
+  back:document.getElementById("menuEditBackButton"),
+  statusMessage:document.getElementById("menuEditStatusMessage"),
+  previewToggle:document.getElementById("menuEditPreviewToggle"),
+  customerPreview:document.getElementById("menuEditCustomerPreview"),
+  previewCard:document.getElementById("menuEditPreviewCard"),
+  previewImage:document.getElementById("menuEditPreviewImage"),
+  previewPlaceholder:document.getElementById("menuEditPreviewPlaceholder"),
+  previewName:document.getElementById("menuEditPreviewName"),
+  previewPrice:document.getElementById("menuEditPreviewPrice"),
+  previewStatus:document.getElementById("menuEditPreviewStatus")
+};
+
+function configured(){return Boolean(CONFIG.SUPABASE_URL&&CONFIG.SUPABASE_PUBLISHABLE_KEY)}
+function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function isAvailable(){return E.availability.getAttribute("aria-checked")==="true"}
+function setAvailable(value){
+  E.availability.setAttribute("aria-checked",String(Boolean(value)));
+  E.availabilityText.textContent=value?"เปิดขาย":"ปิดขาย";
+}
+function priceValue(){
+  const raw=E.price.value.trim().replace(",",".");
+  if(!raw)return null;
+  if(!/^\d+(\.\d{1,2})?$/.test(raw))return null;
+  const value=Number(raw);
+  return Number.isFinite(value)&&value>=0?value:null;
+}
+function clearErrors(){
+  E.nameError.textContent="";E.priceError.textContent="";E.categoryError.textContent="";
+  E.name.removeAttribute("aria-invalid");E.price.removeAttribute("aria-invalid");E.category.removeAttribute("aria-invalid");
+  E.saveError.classList.remove("is-visible");
+}
+function validate(){
+  clearErrors();let ok=true;
+  if(!E.name.value.trim()){
+    E.nameError.textContent="กรุณาระบุชื่อเมนู";E.name.setAttribute("aria-invalid","true");ok=false;
+  }
+  if(priceValue()===null){
+    E.priceError.textContent="กรุณาระบุราคาที่ถูกต้อง";E.price.setAttribute("aria-invalid","true");ok=false;
+  }
+  if(!ALLOWED_CATEGORIES.includes(E.category.value)){
+    E.categoryError.textContent="กรุณาเลือกหมวดเมนูที่ถูกต้อง";E.category.setAttribute("aria-invalid","true");ok=false;
+  }
+  return ok;
+}
+function showStatus(text){
+  clearTimeout(statusTimer);
+  E.statusMessage.textContent=text;E.statusMessage.classList.add("is-visible");
+  statusTimer=setTimeout(()=>E.statusMessage.classList.remove("is-visible"),1800);
+}
+function setBusy(busy){
+  E.saveButton.disabled=busy;E.saveButton.textContent=busy?"กำลังบันทึก…":"บันทึกการเปลี่ยนแปลง";
+  E.imageButton.disabled=busy;E.availability.disabled=busy;E.cancel.disabled=busy;
+}
+function showLoadError(title="ไม่สามารถโหลดเมนูได้",sub="กรุณาลองอีกครั้ง"){
+  E.loading.hidden=true;E.form.hidden=true;E.loadErrorTitle.textContent=title;E.loadErrorSub.textContent=sub;E.loadError.classList.add("is-visible");
+}
+function renderImage(url){
+  if(url){E.imagePreview.src=url;E.imagePreview.hidden=false;E.imagePlaceholder.hidden=true;}
+  else{E.imagePreview.removeAttribute("src");E.imagePreview.hidden=true;E.imagePlaceholder.hidden=false;}
+}
+function renderOptions(groups){
+  const list=Array.isArray(groups)?groups:[];
+  if(!list.length){E.options.innerHTML='<div class="menu-options-empty">เมนูนี้ไม่มีตัวเลือกเพิ่มเติม</div>';return;}
+  E.options.innerHTML=list.map(group=>{
+    const values=Array.isArray(group.options)?group.options:Array.isArray(group.values)?group.values:[];
+    return `<div class="menu-option-group">
+      <p class="menu-option-group-name">${esc(group.name||"ตัวเลือก")}</p>
+      <div class="menu-option-values">${values.map(v=>`<span class="menu-option-chip">${esc(typeof v==="string"?v:(v.name||v.label||"ตัวเลือก"))}</span>`).join("")}</div>
+    </div>`;
+  }).join("");
+}
+
+function currentPreviewImage(){
+  return pendingImageObjectUrl || currentMenu?.image_url || "";
+}
+function renderCustomerPreview(){
+  const name=E.name.value.trim() || "ชื่อเมนู";
+  const price=priceValue();
+  const available=isAvailable();
+  const image=currentPreviewImage();
+
+  E.previewName.textContent=name;
+  E.previewPrice.textContent=money.format(price===null?0:price);
+  E.previewStatus.textContent=available?"เปิดขาย":"หมดชั่วคราว";
+  E.previewCard.classList.toggle("is-unavailable",!available);
+
+  if(image){
+    E.previewImage.src=image;
+    E.previewImage.hidden=false;
+    E.previewPlaceholder.hidden=true;
+  }else{
+    E.previewImage.removeAttribute("src");
+    E.previewImage.hidden=true;
+    E.previewPlaceholder.hidden=false;
+  }
+}
+function toggleCustomerPreview(force){
+  const next=typeof force==="boolean"
+    ? force
+    : !E.customerPreview.classList.contains("is-visible");
+  E.customerPreview.classList.toggle("is-visible",next);
+  E.previewToggle.setAttribute("aria-expanded",String(next));
+  E.previewToggle.textContent=next?"ซ่อนตัวอย่างแบบลูกค้า":"ดูตัวอย่างแบบลูกค้า";
+  if(next)renderCustomerPreview();
+}
+
+function render(){
+  const m=currentMenu;if(!m)return;
+  E.loading.hidden=true;E.loadError.classList.remove("is-visible");E.form.hidden=false;
+  renderImage(m.image_url||"");
+  E.name.value=m.name||"";
+  E.price.value=String(m.price??"");
+  E.category.value=ALLOWED_CATEGORIES.includes(m.category)?m.category:"ส้มตำ";
+  setAvailable(m.is_available===true);
+  renderOptions(m.modifiers||m.options||[]);
+  E.description.value=m.description||"";
+  E.code.textContent=m.code||m.menu_code||m.sku||String(m.id||"—");
+  toggleCustomerPreview(false);
+  renderCustomerPreview();
+}
+async function loadMenu(){
+  if(!currentMenuId){showLoadError("ไม่พบเมนู","กรุณาเลือกเมนูจากหน้าจัดการเมนู");return}
+  E.loading.hidden=false;E.form.hidden=true;E.loadError.classList.remove("is-visible");
+
+  const {data,error}=await supabase
+    .from(CONFIG.MENU_TABLE)
+    .select("*")
+    .eq("store_id",storeId)
+    .eq("id",currentMenuId)
+    .maybeSingle();
+
+  if(error)throw error;
+  if(!data)throw new Error("MENU_NOT_FOUND");
+
+  currentMenu={
+    ...data,
+    price:data.price != null
+      ? Number(data.price)
+      : (data.price_satang != null ? Number(data.price_satang)/100 : 0),
+    is_available:data.is_available !== false
+  };
+
+  pendingImageFile=null;
+  if(pendingImageObjectUrl){URL.revokeObjectURL(pendingImageObjectUrl);pendingImageObjectUrl=null}
+  render();
+}
+function fileExtension(file){
+  const name=String(file?.name||"");
+  const fromName=name.includes(".")?name.split(".").pop().toLowerCase():"";
+  if(/^[a-z0-9]+$/.test(fromName))return fromName;
+  const subtype=String(file?.type||"image/jpeg").split("/")[1]||"jpg";
+  return subtype.replace("jpeg","jpg").replace(/[^a-z0-9]/g,"")||"jpg";
+}
+async function uploadPendingImage(){
+  if(!pendingImageFile)return {url:currentMenu.image_url||"",path:null};
+  const ext=fileExtension(pendingImageFile);
+  const path=`${storeId}/${currentMenuId}/${crypto.randomUUID()}.${ext}`;
+  const {error}=await supabase.storage.from(CONFIG.MENU_IMAGES_BUCKET).upload(path,pendingImageFile,{
+    cacheControl:"3600",upsert:false,contentType:pendingImageFile.type||undefined
+  });
+  if(error)throw error;
+  const {data}=supabase.storage.from(CONFIG.MENU_IMAGES_BUCKET).getPublicUrl(path);
+  return {url:data.publicUrl,path};
+}
+async function updateMenuRow(imageUrl){
+  const price=priceValue();
+
+  const commonPayload={
+    name:E.name.value.trim(),
+    category:E.category.value,
+    is_available:isAvailable(),
+    description:E.description.value.trim()||null,
+    image_url:imageUrl||null
+  };
+
+  // First try the schema used by the KHUNYUI menu master: `price`.
+  let result=await supabase
+    .from(CONFIG.MENU_TABLE)
+    .update({...commonPayload,price})
+    .eq("store_id",storeId)
+    .eq("id",currentMenuId)
+    .select("*")
+    .single();
+
+  if(!result.error)return result;
+
+  // Compatibility fallback for a schema that stores money as integer satang.
+  const msg=String(result.error?.message||"").toLowerCase();
+  const priceColumnMissing=msg.includes("price") && (
+    msg.includes("column") || msg.includes("schema cache") || msg.includes("does not exist")
+  );
+
+  if(!priceColumnMissing)return result;
+
+  return await supabase
+    .from(CONFIG.MENU_TABLE)
+    .update({...commonPayload,price_satang:Math.round(price*100)})
+    .eq("store_id",storeId)
+    .eq("id",currentMenuId)
+    .select("*")
+    .single();
+}
+
+async function saveMenu(){
+  if(!validate())return;
+  setBusy(true);E.saveError.classList.remove("is-visible");
+  let uploadedPath=null;
+
+  try{
+    const image=await uploadPendingImage();
+    uploadedPath=image.path;
+
+    const {data,error}=await updateMenuRow(image.url);
+    if(error)throw error;
+
+    currentMenu={
+      ...currentMenu,
+      ...data,
+      price:data.price != null
+        ? Number(data.price)
+        : (data.price_satang != null ? Number(data.price_satang)/100 : priceValue())
+    };
+
+    pendingImageFile=null;
+    showStatus("✓ บันทึกเมนูแล้ว — ฝั่งลูกค้าใช้ข้อมูลเดียวกัน");
+    setTimeout(()=>location.href="screen06.html",650);
+  }catch(error){
+    console.error("Menu save failed:",error);
+
+    if(uploadedPath){
+      try{
+        await supabase.storage
+          .from(CONFIG.MENU_IMAGES_BUCKET)
+          .remove([uploadedPath]);
+      }catch(_){}
+    }
+
+    E.saveError.classList.add("is-visible");
+  }finally{
+    setBusy(false);
+  }
+}
+async function start(){
+  if(!configured()){E.loading.textContent="กำลังโหลด";return}
+
+  try{
+    supabase=createClient(
+      CONFIG.SUPABASE_URL,
+      CONFIG.SUPABASE_PUBLISHABLE_KEY,
+      {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}
+    );
+
+    const {data:u,error:ue}=await supabase.auth.getUser();
+
+    if(ue || !u?.user?.id){
+      location.replace("index.html");
+      return;
+    }
+
+    const {data:membership,error:membershipError}=await supabase
+      .from("store_members")
+      .select("store_id,role,is_active")
+      .eq("store_id",CONFIG.STORE_ID)
+      .eq("user_id",u.user.id)
+      .eq("role","owner")
+      .eq("is_active",true)
+      .maybeSingle();
+
+    if(membershipError)throw membershipError;
+
+    if(!membership){
+      await supabase.auth.signOut();
+      location.replace("index.html");
+      return;
+    }
+
+    storeId=String(membership.store_id);
+    await loadMenu();
+  }catch(error){
+    console.error("SCREEN 07:",error);
+    showLoadError();
+  }
+}
+E.imageButton.addEventListener("click",()=>E.imageFile.click());
+E.previewToggle.addEventListener("click",()=>toggleCustomerPreview());
+[E.name,E.price,E.category,E.description].forEach(control=>{
+  control.addEventListener("input",renderCustomerPreview);
+  control.addEventListener("change",renderCustomerPreview);
+});
+
+E.imageFile.addEventListener("change",()=>{
+  const file=E.imageFile.files?.[0];if(!file)return;
+  if(!file.type.startsWith("image/")){E.imageFile.value="";return}
+  pendingImageFile=file;
+  if(pendingImageObjectUrl)URL.revokeObjectURL(pendingImageObjectUrl);
+  pendingImageObjectUrl=URL.createObjectURL(file);
+  renderImage(pendingImageObjectUrl);
+  renderCustomerPreview();
+});
+E.availability.addEventListener("click",()=>{setAvailable(!isAvailable());renderCustomerPreview();});
+E.form.addEventListener("submit",event=>{event.preventDefault();saveMenu()});
+E.saveRetry.addEventListener("click",()=>E.form.requestSubmit());
+E.loadRetry.addEventListener("click",()=>loadMenu().catch(()=>showLoadError()));
+E.cancel.addEventListener("click",()=>location.href="screen06.html");
+E.back.addEventListener("click",()=>location.href="screen06.html");
+[E.name,E.price,E.category].forEach(el=>el.addEventListener("input",clearErrors));
+addEventListener("beforeunload",()=>{clearTimeout(statusTimer);if(pendingImageObjectUrl)URL.revokeObjectURL(pendingImageObjectUrl)});
+start();
+
+</script>
+</body>
+</html>

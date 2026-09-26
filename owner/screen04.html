@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>KHUNYUI — ออเดอร์วันนี้</title>
+<style>
+:root {
+  --brand-red:#D52228;
+  --brand-red-soft:#FFF0F1;
+  --text:#171717;
+  --muted:#6B6B6B;
+  --line:#E9E9E9;
+  --line-soft:#EEEEEE;
+  --surface-soft:#F7F7F7;
+  --success:#187547;
+  --nav-height:68px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#fff;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+button{font:inherit}
+button,input{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.badge {
+  position:absolute; top:4px; right:3px; min-width:18px; height:18px;
+  padding:0 5px; display:none; align-items:center; justify-content:center;
+  border:2px solid #fff; border-radius:999px; background:var(--brand-red);
+  color:#fff; font-size:10px; font-weight:800; line-height:1;
+}
+.badge.is-visible{display:flex}
+.orders-screen{min-height:100vh;min-height:100dvh;padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom));background:#fff}
+.orders-topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.98);border-bottom:1px solid var(--line-soft);backdrop-filter:blur(10px)}
+.orders-topbar-inner{width:min(100%,720px);min-height:66px;margin:0 auto;padding:10px 14px 9px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.orders-title{margin:0;font-size:18px;line-height:1.3;font-weight:800;letter-spacing:-.015em}
+.orders-branch{margin:3px 0 0;color:var(--muted);font-size:11.5px;line-height:1.35}
+.orders-bell{position:relative;width:42px;height:42px;border:0;border-radius:50%;background:#fff;display:grid;place-items:center;color:#262626}
+.orders-bell:hover{background:#F6F6F6}
+.orders-bell svg{width:22px;height:22px;stroke:currentColor}
+.orders-tabs-wrap{position:sticky;top:66px;z-index:19;background:#fff;border-bottom:1px solid var(--line-soft)}
+.orders-tabs-scroll{overflow-x:auto;scrollbar-width:none}
+.orders-tabs-scroll::-webkit-scrollbar{display:none}
+.orders-tabs{width:max-content;min-width:100%;max-width:720px;margin:0 auto;display:flex;padding:0 8px}
+.orders-tab{position:relative;min-height:50px;padding:0 13px;border:0;background:#fff;color:#666;font-size:13px;font-weight:700;white-space:nowrap}
+.orders-tab[aria-selected="true"]{color:var(--brand-red)}
+.orders-tab[aria-selected="true"]::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:2px;border-radius:999px;background:var(--brand-red)}
+.orders-tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:4px;padding:0 6px;border-radius:999px;background:#F1F1F1;color:#555;font-size:10.5px;font-weight:800}
+.orders-tab[aria-selected="true"] .orders-tab-count{background:var(--brand-red-soft);color:var(--brand-red)}
+.orders-main{width:min(100%,720px);margin:0 auto;padding:16px 18px 32px}
+.orders-panel-list{display:grid;gap:12px}
+.today-order-card{width:100%;padding:15px 16px;border:1px solid var(--line-soft);border-radius:14px;background:#fff;text-align:left;color:inherit}
+.today-order-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.today-order-no{margin:0;font-size:17px;font-weight:820;letter-spacing:-.01em}
+.today-order-time{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+.order-status-chip{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:11.5px;font-weight:750;white-space:nowrap;background:#F3F3F3;color:#555}
+.status-new{background:var(--brand-red-soft);color:var(--brand-red)}
+.status-preparing{background:#FFF7E8;color:#956113}
+.status-ready{background:#EDF8F1;color:#187547}
+.status-completed{background:#F2F2F2;color:#555}
+.status-cancelled{background:#F3F3F3;color:#777}
+.order-items-preview{margin-top:13px;padding-top:12px;border-top:1px solid var(--line-soft)}
+.order-item-line{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:3px 0;font-size:13px}
+.order-item-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.order-item-qty{color:var(--muted);font-weight:700;white-space:nowrap}
+.order-more-items{margin-top:5px;color:var(--muted);font-size:11.5px}
+.today-order-total-row{margin-top:13px;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.today-order-count{color:var(--muted);font-size:12px}
+.today-order-total{font-size:15px}
+.today-order-meta{margin-top:9px;display:flex;flex-wrap:wrap;gap:8px 14px;color:#555;font-size:11.5px}
+.today-order-detail{margin-top:12px;color:var(--brand-red);font-size:12px;font-weight:750;text-align:right}
+.orders-empty,.orders-error{min-height:240px;display:none;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+.orders-empty.is-visible,.orders-error.is-visible{display:grid}
+.orders-empty-title{margin:0;color:var(--text);font-size:16px;font-weight:760}
+.orders-empty-sub{margin:7px 0 0;font-size:12.5px}
+.orders-loading{min-height:240px;display:grid;place-items:center;color:var(--muted);font-size:13px}
+.orders-error p{margin:0;color:var(--text);font-weight:700}
+.orders-error button{margin-top:13px;min-width:116px;min-height:42px;border:0;border-radius:9px;background:var(--brand-red);color:#fff;font-weight:750}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.98);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px)}
+.bottom-nav-inner{width:min(100%,720px);height:var(--nav-height);margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.nav-item{position:relative;min-width:0;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#777;font-size:10.5px;font-weight:650}
+.nav-item svg{width:21px;height:21px;stroke:currentColor}
+.nav-item.is-active{color:var(--brand-red)}
+.nav-item.is-active::before{content:"";position:absolute;top:0;width:28px;height:2px;border-radius:999px;background:var(--brand-red)}
+@media(max-width:460px){
+  .orders-topbar-inner{padding-left:14px;padding-right:10px}
+  .orders-tabs{padding-left:6px;padding-right:6px}
+  .orders-tab{padding-left:11px;padding-right:11px}
+  .orders-main{padding:14px 14px 28px}
+}
+</style>
+</head>
+<body>
+<section class="orders-screen" aria-labelledby="ordersScreenTitle">
+  <header class="orders-topbar">
+    <div class="orders-topbar-inner">
+      <div>
+        <h1 class="orders-title" id="ordersScreenTitle">ออเดอร์วันนี้</h1>
+        <p class="orders-branch" id="ordersBranch">สาขา ตลาดสดคุณยิ้ม</p>
+      </div>
+      <button class="orders-bell" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+          <path d="M10 21h4"/>
+        </svg>
+        <span class="badge" id="ordersNotificationBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="orders-tabs-wrap">
+    <div class="orders-tabs-scroll">
+      <div class="orders-tabs" role="tablist" aria-label="สถานะออเดอร์วันนี้">
+        <button class="orders-tab" id="ordersTabAll" role="tab" type="button"
+          aria-selected="true" aria-controls="ordersTabPanel" tabindex="0" data-order-tab="all">ทั้งหมด</button>
+        <button class="orders-tab" id="ordersTabNew" role="tab" type="button"
+          aria-selected="false" aria-controls="ordersTabPanel" tabindex="-1" data-order-tab="new">
+          ใหม่ <span class="orders-tab-count" id="ordersCountNew">0</span>
+        </button>
+        <button class="orders-tab" id="ordersTabPreparing" role="tab" type="button"
+          aria-selected="false" aria-controls="ordersTabPanel" tabindex="-1" data-order-tab="preparing">
+          กำลังทำ <span class="orders-tab-count" id="ordersCountPreparing">0</span>
+        </button>
+        <button class="orders-tab" id="ordersTabReady" role="tab" type="button"
+          aria-selected="false" aria-controls="ordersTabPanel" tabindex="-1" data-order-tab="ready">
+          พร้อมรับ <span class="orders-tab-count" id="ordersCountReady">0</span>
+        </button>
+        <button class="orders-tab" id="ordersTabCompleted" role="tab" type="button"
+          aria-selected="false" aria-controls="ordersTabPanel" tabindex="-1" data-order-tab="completed">
+          เสร็จสิ้น
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="orders-main">
+    <div id="ordersTabPanel" role="tabpanel" aria-labelledby="ordersTabAll" tabindex="0">
+      <div class="orders-loading" id="ordersLoading">กำลังโหลด</div>
+      <div class="orders-panel-list" id="ordersList" hidden></div>
+
+      <div class="orders-empty" id="ordersEmpty">
+        <div>
+          <p class="orders-empty-title" id="ordersEmptyTitle">ยังไม่มีออเดอร์</p>
+          <p class="orders-empty-sub">ออเดอร์ใหม่จะแสดงที่นี่อัตโนมัติ</p>
+        </div>
+      </div>
+
+      <div class="orders-error" id="ordersError">
+        <div>
+          <p>ไม่สามารถโหลดออเดอร์ได้</p>
+          <button id="ordersRetryButton" type="button">ลองอีกครั้ง</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="เมนูหลัก">
+    <div class="bottom-nav-inner">
+      <button class="nav-item" type="button" data-go="screen03.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/>
+        </svg><span>หน้าแรก</span>
+      </button>
+      <button class="nav-item is-active" type="button" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+          <rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>
+        </svg><span>ออเดอร์</span>
+      </button>
+      <button class="nav-item" type="button" data-go="screen06.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h16"/></svg><span>เมนูร้าน</span>
+      </button>
+      <button class="nav-item" type="button" data-go="screen08.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+          <path d="M12 2v20M17 6.2c-.9-.8-2.3-1.2-4-1.2-2.4 0-4 1.1-4 2.8 0 4.4 8.5 1.9 8.5 6.3 0 1.9-1.8 3.2-4.5 3.2-1.9 0-3.5-.5-4.6-1.5"/>
+        </svg><span>การเงิน</span>
+      </button>
+      <button class="nav-item" type="button" data-go="screen09.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>
+        </svg><span>เพิ่มเติม</span>
+      </button>
+    </div>
+  </nav>
+</section>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const CONFIG = Object.freeze({
+  SUPABASE_URL: "https://mpxxarmidmpamnfzdwdi.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY: "sb_publishable_jfdNhtPCWpxjCGccoON2mw_gJqNzrs3",
+  STORE_ID: "11111111-1111-4111-8111-111111111111",
+  TIMEZONE: "Asia/Bangkok"
+});
+
+const supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
+
+const money = new Intl.NumberFormat("th-TH", {
+  style:"currency", currency:"THB", minimumFractionDigits:0, maximumFractionDigits:2
+});
+
+const O = {
+  branch: document.getElementById("ordersBranch"),
+  badge: document.getElementById("ordersNotificationBadge"),
+  loading: document.getElementById("ordersLoading"),
+  list: document.getElementById("ordersList"),
+  empty: document.getElementById("ordersEmpty"),
+  emptyTitle: document.getElementById("ordersEmptyTitle"),
+  error: document.getElementById("ordersError"),
+  retry: document.getElementById("ordersRetryButton"),
+  countNew: document.getElementById("ordersCountNew"),
+  countPreparing: document.getElementById("ordersCountPreparing"),
+  countReady: document.getElementById("ordersCountReady")
+};
+
+let todayOrdersCache = [];
+let ordersActiveTab = new URLSearchParams(location.search).get("tab") || "all";
+let realtimeChannel = null;
+let reloadTimer = null;
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function businessDate() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.TIMEZONE, year:"numeric", month:"2-digit", day:"2-digit"
+  }).formatToParts(new Date());
+  const map = Object.fromEntries(parts.map(p => [p.type,p.value]));
+  return `${map.year}-${map.month}-${map.day}`;
+}
+
+function formatTime(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return new Intl.DateTimeFormat("th-TH", {
+    timeZone: CONFIG.TIMEZONE, hour:"2-digit", minute:"2-digit", hour12:false
+  }).format(d);
+}
+
+function statusLabel(value) {
+  return {
+    new:"ใหม่", preparing:"กำลังทำ", ready:"พร้อมรับ",
+    completed:"เสร็จสิ้น", cancelled:"ยกเลิก"
+  }[value] || value || "—";
+}
+
+function statusClass(value) {
+  return {
+    new:"status-new", preparing:"status-preparing", ready:"status-ready",
+    completed:"status-completed", cancelled:"status-cancelled"
+  }[value] || "status-completed";
+}
+
+function paymentLabel(payment) {
+  if (!payment) return "ยังไม่มีข้อมูลการชำระ";
+  const method = String(payment.method || "").toLowerCase();
+  const confirmed = payment.status === "confirmed";
+  if (method === "promptpay_qr") return confirmed ? "QR • ชำระแล้ว" : "QR • รอชำระ";
+  if (method === "cash") return confirmed ? "เงินสด • ชำระแล้ว" : "เงินสด • ชำระเมื่อรับอาหาร";
+  if (method === "gateway") return confirmed ? "ออนไลน์ • ชำระแล้ว" : "ออนไลน์ • รอชำระ";
+  return confirmed ? "ชำระแล้ว" : "รอชำระ";
+}
+
+function fulfillmentLabel(value) {
+  if (value === "dine_in") return "ทานที่นี่";
+  if (value === "takeaway") return "กลับบ้าน";
+  return "—";
+}
+
+function counts() {
+  const result = {new:0, preparing:0, ready:0, completed:0};
+  todayOrdersCache.forEach(order => {
+    if (Object.prototype.hasOwnProperty.call(result, order.status)) result[order.status] += 1;
+  });
+  return result;
+}
+
+function emptyTitle() {
+  if (ordersActiveTab === "new") return "ยังไม่มีออเดอร์ใหม่";
+  if (ordersActiveTab === "preparing") return "ยังไม่มีออเดอร์ที่กำลังทำ";
+  if (ordersActiveTab === "ready") return "ยังไม่มีออเดอร์พร้อมรับ";
+  if (ordersActiveTab === "completed") return "ยังไม่มีออเดอร์เสร็จสิ้น";
+  return "ยังไม่มีออเดอร์วันนี้";
+}
+
+function setOrdersTab(tab, focusTab=false) {
+  const valid = ["all","new","preparing","ready","completed"];
+  ordersActiveTab = valid.includes(tab) ? tab : "all";
+
+  document.querySelectorAll("[data-order-tab]").forEach(button => {
+    const selected = button.dataset.orderTab === ordersActiveTab;
+    button.setAttribute("aria-selected", String(selected));
+    button.tabIndex = selected ? 0 : -1;
+    if (selected) document.getElementById("ordersTabPanel").setAttribute("aria-labelledby", button.id);
+  });
+
+  const url = new URL(location.href);
+  if (ordersActiveTab === "all") url.searchParams.delete("tab");
+  else url.searchParams.set("tab", ordersActiveTab);
+  history.replaceState(null, "", url);
+
+  if (focusTab) document.querySelector(`[data-order-tab="${ordersActiveTab}"]`)?.focus();
+  renderOrders();
+}
+
+function renderOrders() {
+  const c = counts();
+  O.countNew.textContent = c.new;
+  O.countPreparing.textContent = c.preparing;
+  O.countReady.textContent = c.ready;
+  O.badge.textContent = c.new > 99 ? "99+" : String(c.new);
+  O.badge.classList.toggle("is-visible", c.new > 0);
+
+  const rows = ordersActiveTab === "all"
+    ? todayOrdersCache
+    : todayOrdersCache.filter(order => order.status === ordersActiveTab);
+
+  O.loading.hidden = true;
+  O.error.classList.remove("is-visible");
+
+  if (!rows.length) {
+    O.list.hidden = true;
+    O.emptyTitle.textContent = emptyTitle();
+    O.empty.classList.add("is-visible");
+    return;
+  }
+
+  O.empty.classList.remove("is-visible");
+  O.list.hidden = false;
+
+  O.list.innerHTML = rows.map(order => {
+    const items = order.items || [];
+    const preview = items.slice(0,3).map(item => `
+      <div class="order-item-line">
+        <span class="order-item-name">${escapeHtml(item.menu_name_snapshot || "รายการอาหาร")}</span>
+        <span class="order-item-qty">× ${Number(item.quantity || 1)}</span>
+      </div>`).join("");
+    const more = items.length > 3 ? `<div class="order-more-items">+ อีก ${items.length-3} รายการ</div>` : "";
+    const itemCount = items.reduce((sum,item)=>sum+Number(item.quantity||0),0);
+
+    return `
+      <button class="today-order-card" type="button" data-order-id="${escapeHtml(order.id)}">
+        <div class="today-order-head">
+          <div>
+            <p class="today-order-no">${escapeHtml(order.queue_code || "—")}</p>
+            <p class="today-order-time">${escapeHtml(formatTime(order.created_at))}</p>
+          </div>
+          <span class="order-status-chip ${statusClass(order.status)}">${escapeHtml(statusLabel(order.status))}</span>
+        </div>
+        <div class="order-items-preview">${preview}${more}</div>
+        <div class="today-order-total-row">
+          <span class="today-order-count">${itemCount} รายการ</span>
+          <strong class="today-order-total">${money.format(Number(order.total_satang||0)/100)}</strong>
+        </div>
+        <div class="today-order-meta">
+          <span>${escapeHtml(paymentLabel(order.payment))}</span>
+          <span>${escapeHtml(fulfillmentLabel(order.fulfillment_type))}</span>
+        </div>
+        <div class="today-order-detail">ดูรายละเอียด ›</div>
+      </button>`;
+  }).join("");
+}
+
+async function verifyOwner() {
+  const { data:userData, error:userError } = await supabase.auth.getUser();
+  if (userError || !userData?.user?.id) {
+    location.replace("index.html");
+    return false;
+  }
+
+  const { data:membership, error:membershipError } = await supabase
+    .from("store_members")
+    .select("store_id, role, is_active")
+    .eq("store_id", CONFIG.STORE_ID)
+    .eq("user_id", userData.user.id)
+    .eq("role", "owner")
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (membershipError) throw membershipError;
+  if (!membership) {
+    await supabase.auth.signOut();
+    location.replace("index.html");
+    return false;
+  }
+  return true;
+}
+
+async function loadOrders() {
+  O.loading.hidden = false;
+  O.list.hidden = true;
+  O.empty.classList.remove("is-visible");
+  O.error.classList.remove("is-visible");
+
+  const { data:store, error:storeError } = await supabase
+    .from("stores")
+    .select("branch_name")
+    .eq("id", CONFIG.STORE_ID)
+    .single();
+  if (storeError) throw storeError;
+  if (store?.branch_name) O.branch.textContent = `สาขา ${store.branch_name}`;
+
+  const { data:orders, error:ordersError } = await supabase
+    .from("orders")
+    .select("id, queue_code, status, fulfillment_type, total_satang, created_at, business_date")
+    .eq("store_id", CONFIG.STORE_ID)
+    .eq("business_date", businessDate())
+    .order("created_at", {ascending:false});
+  if (ordersError) throw ordersError;
+
+  const ids = (orders || []).map(o => o.id);
+  let items = [];
+  let payments = [];
+
+  if (ids.length) {
+    const [itemsResult, paymentsResult] = await Promise.all([
+      supabase
+        .from("order_items")
+        .select("order_id, menu_name_snapshot, quantity")
+        .in("order_id", ids)
+        .order("created_at", {ascending:true}),
+      supabase
+        .from("payments")
+        .select("order_id, method, status, amount_satang, confirmed_at")
+        .in("order_id", ids)
+    ]);
+
+    if (itemsResult.error) throw itemsResult.error;
+    if (paymentsResult.error) throw paymentsResult.error;
+    items = itemsResult.data || [];
+    payments = paymentsResult.data || [];
+  }
+
+  const itemsByOrder = new Map();
+  items.forEach(item => {
+    if (!itemsByOrder.has(item.order_id)) itemsByOrder.set(item.order_id, []);
+    itemsByOrder.get(item.order_id).push(item);
+  });
+  const paymentByOrder = new Map(payments.map(p => [p.order_id,p]));
+
+  todayOrdersCache = (orders || []).map(order => ({
+    ...order,
+    items: itemsByOrder.get(order.id) || [],
+    payment: paymentByOrder.get(order.id) || null
+  }));
+
+  renderOrders();
+}
+
+function showError(error) {
+  console.error("SCREEN 04:", error);
+  O.loading.hidden = true;
+  O.list.hidden = true;
+  O.empty.classList.remove("is-visible");
+  O.error.classList.add("is-visible");
+}
+
+async function connectRealtime() {
+  try {
+    await supabase.realtime.setAuth();
+    realtimeChannel = supabase
+      .channel(`store:${CONFIG.STORE_ID}:orders`, {config:{private:true}})
+      .on("broadcast", {event:"order_changed"}, scheduleReload)
+      .on("broadcast", {event:"payment_changed"}, scheduleReload)
+      .subscribe();
+  } catch (error) {
+    console.warn("Realtime unavailable:", error);
+  }
+}
+
+function scheduleReload() {
+  clearTimeout(reloadTimer);
+  reloadTimer = setTimeout(() => loadOrders().catch(showError), 180);
+}
+
+document.querySelectorAll("[data-order-tab]").forEach(button => {
+  button.addEventListener("click", () => setOrdersTab(button.dataset.orderTab));
+});
+
+O.retry.addEventListener("click", () => loadOrders().catch(showError));
+
+O.list.addEventListener("click", event => {
+  const card = event.target.closest("[data-order-id]");
+  if (!card) return;
+  location.href = `screen05.html?order=${encodeURIComponent(card.dataset.orderId)}`;
+});
+
+document.querySelectorAll("[data-go]").forEach(button => {
+  button.addEventListener("click", () => location.href = button.dataset.go);
+});
+
+(async function boot() {
+  try {
+    const allowed = await verifyOwner();
+    if (!allowed) return;
+    setOrdersTab(ordersActiveTab);
+    await loadOrders();
+    await connectRealtime();
+  } catch (error) {
+    showError(error);
+  }
+})();
+</script>
+</body>
+</html>

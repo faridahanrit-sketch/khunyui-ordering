@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>เพิ่มเติม | KHUNYUI OWNER</title>
+<style>
+:root{
+  --brand-red:#D52228;--brand-red-soft:#FFF3F3;--text:#171717;--muted:#6B6B6B;
+  --line-soft:#E9E9E9;--dashboard-width:1160px;--nav-height:68px
+}
+*{box-sizing:border-box}
+html,body{min-height:100%;background:#fff}
+body{margin:0;color:var(--text);font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.app-screen{display:block;min-height:100vh;min-height:100dvh}
+.badge{position:absolute;top:4px;right:3px;min-width:18px;height:18px;padding:0 5px;display:none;align-items:center;justify-content:center;border:2px solid #fff;border-radius:999px;background:var(--brand-red);color:#fff;font-size:10px;font-weight:800}
+.badge.is-visible{display:flex}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.98);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px)}
+.bottom-nav-inner{width:min(100%,720px);height:var(--nav-height);margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.nav-item{position:relative;min-width:0;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#777;font-size:10.5px;font-weight:650}
+.nav-item svg{width:21px;height:21px;stroke:currentColor}
+
+/* =========================
+   SCREEN 09 — MORE / STORE SETTINGS
+========================= */
+.more-screen{
+  min-height:100vh;
+  min-height:100dvh;
+  padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom));
+  background:#fff;
+}
+.more-topbar{
+  position:sticky;
+  top:0;
+  z-index:28;
+  background:rgba(255,255,255,.98);
+  border-bottom:1px solid var(--line-soft);
+  backdrop-filter:blur(10px);
+}
+.more-topbar-inner{
+  width:min(100%,760px);
+  min-height:68px;
+  margin:0 auto;
+  padding:10px 18px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+}
+.more-title{
+  margin:0;
+  font-size:20px;
+  line-height:1.35;
+  font-weight:800;
+}
+.more-branch{
+  margin:3px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+.more-bell{
+  width:44px;height:44px;display:grid;place-items:center;
+  border:0;border-radius:10px;background:transparent;color:#282828;position:relative
+}
+.more-bell:hover{background:#f6f6f6}
+.more-bell svg{width:22px;height:22px;stroke:currentColor}
+
+.more-main{
+  width:min(100%,760px);
+  margin:0 auto;
+  padding:18px 18px 30px;
+}
+.more-loading{
+  min-height:300px;display:grid;place-items:center;color:var(--muted);font-size:13px
+}
+.more-error{
+  min-height:300px;display:none;place-items:center;text-align:center;padding:28px 18px
+}
+.more-error.is-visible{display:grid}
+.more-error-title{margin:0;font-size:16px;font-weight:760}
+.more-error button{
+  min-width:120px;min-height:46px;margin-top:16px;border:0;border-radius:9px;
+  background:var(--brand-red);color:#fff;font-weight:720
+}
+.more-content[hidden]{display:none!important}
+
+.more-section{
+  margin-top:22px;
+  border-top:1px solid var(--line-soft);
+  padding-top:18px;
+}
+.more-section:first-child{
+  margin-top:0;border-top:0;padding-top:0
+}
+.more-section-title{
+  margin:0 0 11px;font-size:15px;line-height:1.4;font-weight:790
+}
+.more-store-status{
+  min-height:72px;
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  background:#fff;
+  padding:13px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.more-status-copy{min-width:0}
+.more-status-label{
+  margin:0;font-size:14px;font-weight:770
+}
+.more-status-sub{
+  margin:4px 0 0;color:var(--muted);font-size:11.5px;line-height:1.45
+}
+.more-switch-wrap{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.more-switch-text{font-size:12px;color:#555;white-space:nowrap}
+.more-switch{
+  position:relative;width:48px;height:28px;border:0;border-radius:999px;
+  background:#d7d7d7;padding:0
+}
+.more-switch[aria-checked="true"]{background:var(--brand-red)}
+.more-switch::after{
+  content:"";position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:transform .15s ease
+}
+.more-switch[aria-checked="true"]::after{transform:translateX(20px)}
+.more-switch:disabled{opacity:.55;cursor:wait}
+
+.more-list{
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+.more-row{
+  width:100%;
+  min-height:72px;
+  border:0;
+  border-top:1px solid var(--line-soft);
+  background:#fff;
+  padding:13px 15px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+  text-align:left;
+  color:var(--text)
+}
+.more-row:first-child{border-top:0}
+.more-row:hover{background:#fcfcfc}
+.more-row-title{font-size:14px;font-weight:760}
+.more-row-sub{
+  margin-top:4px;color:var(--muted);font-size:11.8px;line-height:1.45;overflow-wrap:anywhere
+}
+.more-row-arrow{color:#888;font-size:18px}
+.more-about{
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  padding:15px;
+  background:#fff
+}
+.more-about-name{margin:0;font-size:14px;font-weight:800}
+.more-about-version{margin:5px 0 0;color:var(--muted);font-size:12px}
+.more-signout{
+  width:100%;min-height:50px;border:1px solid #eed0d2;border-radius:11px;
+  background:#fff;color:var(--brand-red);font-size:14px;font-weight:780
+}
+.more-signout:hover{background:var(--brand-red-soft)}
+
+.more-subview[hidden]{display:none!important}
+.more-subview-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:18px
+}
+.more-subview-back{
+  min-height:42px;border:0;border-radius:9px;background:transparent;color:#333;
+  padding:7px 8px 7px 0;font-size:13px;font-weight:740
+}
+.more-subview-title{margin:0;font-size:18px;font-weight:800}
+.more-form-group{margin-top:16px}
+.more-form-label{
+  display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#333
+}
+.more-input{
+  width:100%;height:50px;border:1px solid #ddd;border-radius:10px;background:#fff;
+  color:var(--text);padding:0 13px;outline:none;font-size:14px
+}
+.more-input:focus{
+  border-color:var(--brand-red);box-shadow:0 0 0 3px rgba(213,34,40,.12)
+}
+.more-field-error{
+  min-height:18px;margin:5px 0 0;color:#b42318;font-size:12px
+}
+.more-save{
+  width:100%;min-height:50px;margin-top:22px;border:0;border-radius:10px;
+  background:var(--brand-red);color:#fff;font-size:14px;font-weight:780
+}
+.more-save:disabled{opacity:.6;cursor:wait}
+.more-setting-list{
+  border:1px solid var(--line-soft);border-radius:14px;overflow:hidden
+}
+.more-setting-row{
+  min-height:68px;padding:12px 15px;border-top:1px solid var(--line-soft);
+  display:flex;align-items:center;justify-content:space-between;gap:16px
+}
+.more-setting-row:first-child{border-top:0}
+.more-setting-label{font-size:13px;font-weight:730}
+.more-setting-sub{margin-top:3px;color:var(--muted);font-size:11.5px}
+.more-email-box{
+  min-height:48px;border:1px solid var(--line-soft);border-radius:10px;
+  background:#f8f8f8;color:#555;padding:13px;font-size:13px;overflow-wrap:anywhere
+}
+.more-password-link{
+  width:100%;min-height:52px;margin-top:14px;border:1px solid var(--line-soft);
+  border-radius:10px;background:#fff;color:#333;text-align:left;padding:12px 13px;
+  font-size:13px;font-weight:730
+}
+.more-password-link span{float:right;color:#888}
+.more-password-note{
+  margin:10px 0 0;color:var(--muted);font-size:11.5px;line-height:1.5
+}
+
+.more-dialog{
+  display:none;position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.28);
+  padding:20px;align-items:center;justify-content:center
+}
+.more-dialog.is-visible{display:flex}
+.more-dialog-card{
+  width:min(100%,400px);border-radius:16px;background:#fff;padding:20px;
+  box-shadow:0 18px 60px rgba(0,0,0,.16)
+}
+.more-dialog-title{margin:0;font-size:17px;line-height:1.45;font-weight:800}
+.more-dialog-text{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.more-dialog-actions{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.more-dialog-cancel,
+.more-dialog-danger{
+  min-height:46px;border-radius:10px;font-weight:740
+}
+.more-dialog-cancel{border:1px solid #dadada;background:#fff;color:#333}
+.more-dialog-danger{border:0;background:var(--brand-red);color:#fff}
+
+.more-status-message{
+  position:fixed;left:50%;bottom:calc(var(--nav-height) + 18px + env(safe-area-inset-bottom));
+  z-index:75;transform:translateX(-50%) translateY(12px);
+  max-width:calc(100% - 28px);padding:10px 14px;border:1px solid #dcede3;
+  border-radius:10px;background:#f4fbf7;color:#176a42;
+  box-shadow:0 6px 22px rgba(0,0,0,.08);font-size:13px;font-weight:700;
+  opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease
+}
+.more-status-message.is-error{
+  border-color:#f5d2cf;background:#fff5f4;color:#a3352b
+}
+.more-status-message.is-visible{
+  opacity:1;transform:translateX(-50%) translateY(0)
+}
+
+.more-bottom-nav .nav-item[data-action="more"]{color:var(--brand-red)}
+.more-bottom-nav .nav-item[data-action="more"]::before{
+  content:"";position:absolute;top:0;width:28px;height:2px;border-radius:999px;
+  background:var(--brand-red)
+}
+.more-subview-open .more-bottom-nav{display:none}
+.more-subview-open{padding-bottom:24px}
+
+@media(max-width:520px){
+  .more-topbar-inner{padding-left:14px;padding-right:10px}
+  .more-main{padding:14px 14px 28px}
+  .more-dialog-actions{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+<body>
+
+<!-- SCREEN 09 -->
+<section class="app-screen more-screen is-active" id="screenMore" aria-labelledby="moreTitle">
+  <header class="more-topbar">
+    <div class="more-topbar-inner">
+      <div>
+        <h1 class="more-title" id="moreTitle">เพิ่มเติม</h1>
+        <p class="more-branch" id="moreBranch">สาขา ตลาดสดคุณยิ้ม</p>
+      </div>
+
+      <button class="more-bell" type="button" aria-label="แจ้งเตือน">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+          <path d="M10 21h4"/>
+        </svg>
+        <span class="badge" id="moreNotificationBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="more-main">
+    <div class="more-loading" id="moreLoading">กำลังโหลด</div>
+
+    <div class="more-error" id="moreError">
+      <div>
+        <p class="more-error-title">ไม่สามารถโหลดการตั้งค่าร้านได้</p>
+        <button id="moreRetryButton" type="button">ลองอีกครั้ง</button>
+      </div>
+    </div>
+
+    <div class="more-content" id="moreContent" hidden>
+      <!-- MAIN VIEW -->
+      <div class="more-subview" id="moreMainView">
+        <section class="more-section">
+          <h2 class="more-section-title">สถานะร้าน</h2>
+
+          <div class="more-store-status">
+            <div class="more-status-copy">
+              <p class="more-status-label" id="moreStoreStatusLabel">เปิดรับออเดอร์</p>
+              <p class="more-status-sub">
+                ปิดรับออเดอร์จะหยุดเฉพาะออเดอร์ใหม่ ออเดอร์ที่รับไว้แล้วยังจัดการต่อได้
+              </p>
+            </div>
+
+            <div class="more-switch-wrap">
+              <span class="more-switch-text" id="moreStoreSwitchText">เปิด</span>
+              <button class="more-switch" id="moreStoreSwitch" type="button"
+                role="switch" aria-checked="true" aria-label="สถานะเปิดรับออเดอร์"></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="more-section">
+          <div class="more-list">
+            <button class="more-row" id="moreStoreProfileButton" type="button">
+              <div>
+                <div class="more-row-title">ข้อมูลร้าน</div>
+                <div class="more-row-sub" id="moreStoreProfileSummary">
+                  คุณยุ้ย ส้มตำครกระเบิด • สาขา ตลาดสดคุณยิ้ม
+                </div>
+              </div>
+              <span class="more-row-arrow">›</span>
+            </button>
+
+            <button class="more-row" id="moreNotificationsButton" type="button">
+              <div>
+                <div class="more-row-title">การแจ้งเตือน</div>
+                <div class="more-row-sub" id="moreNotificationsSummary">
+                  ออเดอร์ใหม่ • เสียงแจ้งเตือน
+                </div>
+              </div>
+              <span class="more-row-arrow">›</span>
+            </button>
+
+            <button class="more-row" id="moreAccountButton" type="button">
+              <div>
+                <div class="more-row-title">บัญชี</div>
+                <div class="more-row-sub" id="moreAccountSummary">—</div>
+              </div>
+              <span class="more-row-arrow">›</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="more-section">
+          <h2 class="more-section-title">เกี่ยวกับระบบ</h2>
+          <div class="more-about">
+            <p class="more-about-name">KHUNYUI OWNER</p>
+            <p class="more-about-version">Version 1.0</p>
+          </div>
+        </section>
+
+        <section class="more-section">
+          <button class="more-signout" id="moreSignOutButton" type="button">
+            ออกจากระบบ
+          </button>
+        </section>
+      </div>
+
+      <!-- STORE PROFILE -->
+      <div class="more-subview" id="moreStoreProfileView" hidden>
+        <div class="more-subview-header">
+          <button class="more-subview-back" type="button" data-more-back>‹ เพิ่มเติม</button>
+          <h2 class="more-subview-title">ข้อมูลร้าน</h2>
+        </div>
+
+        <form id="moreStoreProfileForm" novalidate>
+          <div class="more-form-group">
+            <label class="more-form-label" for="moreStoreName">ชื่อร้าน</label>
+            <input class="more-input" id="moreStoreName" type="text" maxlength="160"
+              autocomplete="organization" aria-describedby="moreStoreNameError">
+            <p class="more-field-error" id="moreStoreNameError"></p>
+          </div>
+
+          <div class="more-form-group">
+            <label class="more-form-label" for="moreStoreBranchName">ชื่อสาขา</label>
+            <input class="more-input" id="moreStoreBranchName" type="text" maxlength="160"
+              autocomplete="off" aria-describedby="moreStoreBranchError">
+            <p class="more-field-error" id="moreStoreBranchError"></p>
+          </div>
+
+          <button class="more-save" id="moreStoreProfileSave" type="submit">บันทึก</button>
+        </form>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="more-subview" id="moreNotificationsView" hidden>
+        <div class="more-subview-header">
+          <button class="more-subview-back" type="button" data-more-back>‹ เพิ่มเติม</button>
+          <h2 class="more-subview-title">การแจ้งเตือน</h2>
+        </div>
+
+        <div class="more-setting-list">
+          <div class="more-setting-row">
+            <div>
+              <div class="more-setting-label">แจ้งเตือนออเดอร์ใหม่</div>
+              <div class="more-setting-sub">แจ้งเมื่อมีออเดอร์ใหม่เข้าร้าน</div>
+            </div>
+            <button class="more-switch" id="moreNotifyOrdersSwitch" type="button"
+              role="switch" aria-checked="true"
+              aria-label="แจ้งเตือนออเดอร์ใหม่"></button>
+          </div>
+
+          <div class="more-setting-row">
+            <div>
+              <div class="more-setting-label">เสียงออเดอร์ใหม่</div>
+              <div class="more-setting-sub">เล่นเสียงเมื่อมีออเดอร์ใหม่</div>
+            </div>
+            <button class="more-switch" id="moreNotifySoundSwitch" type="button"
+              role="switch" aria-checked="true"
+              aria-label="เสียงออเดอร์ใหม่"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT -->
+      <div class="more-subview" id="moreAccountView" hidden>
+        <div class="more-subview-header">
+          <button class="more-subview-back" type="button" data-more-back>‹ เพิ่มเติม</button>
+          <h2 class="more-subview-title">บัญชี</h2>
+        </div>
+
+        <div class="more-form-group">
+          <span class="more-form-label">อีเมล</span>
+          <div class="more-email-box" id="moreAccountEmail">—</div>
+        </div>
+
+        <button class="more-password-link" id="morePasswordButton" type="button">
+          เปลี่ยนรหัสผ่าน <span>›</span>
+        </button>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="more-subview" id="morePasswordView" hidden>
+        <div class="more-subview-header">
+          <button class="more-subview-back" type="button" id="morePasswordBack">‹ บัญชี</button>
+          <h2 class="more-subview-title">เปลี่ยนรหัสผ่าน</h2>
+        </div>
+
+        <form id="morePasswordForm" novalidate>
+          <div class="more-form-group">
+            <label class="more-form-label" for="moreNewPassword">รหัสผ่านใหม่</label>
+            <input class="more-input" id="moreNewPassword" type="password"
+              autocomplete="new-password" minlength="8"
+              aria-describedby="moreNewPasswordError">
+            <p class="more-field-error" id="moreNewPasswordError"></p>
+          </div>
+
+          <div class="more-form-group">
+            <label class="more-form-label" for="moreConfirmPassword">
+              ยืนยันรหัสผ่านใหม่
+            </label>
+            <input class="more-input" id="moreConfirmPassword" type="password"
+              autocomplete="new-password" minlength="8"
+              aria-describedby="moreConfirmPasswordError">
+            <p class="more-field-error" id="moreConfirmPasswordError"></p>
+          </div>
+
+          <button class="more-save" id="morePasswordSave" type="submit">
+            บันทึกรหัสผ่านใหม่
+          </button>
+
+          <p class="more-password-note">
+            ระบบไม่แสดงรหัสผ่านเดิมบนหน้าจอ
+          </p>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav more-bottom-nav" aria-label="เมนูหลัก">
+    <div class="bottom-nav-inner">
+      <button class="nav-item" type="button" data-action="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/>
+        </svg><span>หน้าแรก</span>
+      </button>
+
+      <button class="nav-item" type="button" data-action="orders-all">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+          <rect x="5" y="3" width="14" height="18" rx="2"/>
+          <path d="M8 8h8M8 12h8M8 16h5"/>
+        </svg><span>ออเดอร์</span>
+      </button>
+
+      <button class="nav-item" type="button" data-action="menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+          <path d="M4 5h16M4 12h16M4 19h16"/>
+        </svg><span>เมนูร้าน</span>
+      </button>
+
+      <button class="nav-item" type="button" data-action="finance">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+          <path d="M12 2v20M17 6.2c-.9-.8-2.3-1.2-4-1.2-2.4 0-4 1.1-4 2.8 0 4.4 8.5 1.9 8.5 6.3 0 1.9-1.8 3.2-4.5 3.2-1.9 0-3.5-.5-4.6-1.5"/>
+        </svg><span>การเงิน</span>
+      </button>
+
+      <button class="nav-item is-active" type="button" aria-current="page" data-action="more">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <circle cx="5" cy="12" r="1"/>
+          <circle cx="12" cy="12" r="1"/>
+          <circle cx="19" cy="12" r="1"/>
+        </svg><span>เพิ่มเติม</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="more-dialog" id="moreStoreCloseDialog" role="dialog"
+    aria-modal="true" aria-labelledby="moreStoreCloseTitle"
+    aria-describedby="moreStoreCloseText">
+    <div class="more-dialog-card">
+      <h2 class="more-dialog-title" id="moreStoreCloseTitle">
+        ปิดรับออเดอร์ชั่วคราว?
+      </h2>
+      <p class="more-dialog-text" id="moreStoreCloseText">
+        ลูกค้าจะไม่สามารถส่งออเดอร์ใหม่ได้
+        ออเดอร์ที่รับไว้แล้วจะไม่ได้รับผลกระทบ
+      </p>
+      <div class="more-dialog-actions">
+        <button class="more-dialog-cancel" id="moreStoreCloseCancel" type="button">
+          ยกเลิก
+        </button>
+        <button class="more-dialog-danger" id="moreStoreCloseConfirm" type="button">
+          ปิดรับออเดอร์
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="more-dialog" id="moreSignOutDialog" role="dialog"
+    aria-modal="true" aria-labelledby="moreSignOutTitle">
+    <div class="more-dialog-card">
+      <h2 class="more-dialog-title" id="moreSignOutTitle">ออกจากระบบ?</h2>
+      <div class="more-dialog-actions">
+        <button class="more-dialog-cancel" id="moreSignOutCancel" type="button">
+          ยกเลิก
+        </button>
+        <button class="more-dialog-danger" id="moreSignOutConfirm" type="button">
+          ออกจากระบบ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="more-status-message" id="moreStatusMessage"
+    role="status" aria-live="polite" aria-atomic="true"></div>
+</section>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const CONFIG=Object.freeze({
+  SUPABASE_URL:"https://mpxxarmidmpamnfzdwdi.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY:"sb_publishable_jfdNhtPCWpxjCGccoON2mw_gJqNzrs3",
+  STORE_ID:"11111111-1111-4111-8111-111111111111",
+  STORE_SETTINGS_RPC:"owner_store_settings",
+  SET_STORE_ACCEPTING_RPC:"owner_set_accepting_orders",
+  UPDATE_STORE_PROFILE_RPC:"owner_update_store_profile",
+  OWNER_PREFS_RPC:"owner_notification_preferences",
+  UPDATE_OWNER_PREFS_RPC:"owner_update_notification_preferences",
+  STORE_BROADCAST_TOPIC_PREFIX:"store-settings"
+});
+
+let supabase=null;
+let storeId=null;
+let cachedDashboard={order_counts:{new:0},store:{}};
+let ordersBroadcastChannel=null;
+let ownerMenuChannel=null;
+const screens={more:document.getElementById("screenMore")};
+const form=document.createElement("form");
+
+function createSupabaseClient(){
+  if(!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_PUBLISHABLE_KEY)return null;
+  if(!supabase){
+    supabase=createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_PUBLISHABLE_KEY,{
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+  }
+  return supabase;
+}
+function showScreen(){}
+function setMessage(){}
+function setConnection(){}
+async function loadDashboard(){return moreSettings.accepting_orders!==false}
+async function disconnectRealtime(){}
+
+const MORE_VERSION = "1.0";
+
+let moreSettings = {
+  store_name:"คุณยุ้ย ส้มตำครกระเบิด",
+  branch:"ตลาดสดคุณยิ้ม",
+  accepting_orders:true,
+  notify_new_orders:true,
+  sound_new_orders:true,
+  email:""
+};
+let moreStatusTimer = null;
+let storeSettingsChannel = null;
+
+const MS = {
+  screen:document.getElementById("screenMore"),
+  branch:document.getElementById("moreBranch"),
+  badge:document.getElementById("moreNotificationBadge"),
+  loading:document.getElementById("moreLoading"),
+  error:document.getElementById("moreError"),
+  retry:document.getElementById("moreRetryButton"),
+  content:document.getElementById("moreContent"),
+
+  mainView:document.getElementById("moreMainView"),
+  storeProfileView:document.getElementById("moreStoreProfileView"),
+  notificationsView:document.getElementById("moreNotificationsView"),
+  accountView:document.getElementById("moreAccountView"),
+  passwordView:document.getElementById("morePasswordView"),
+
+  storeSwitch:document.getElementById("moreStoreSwitch"),
+  storeSwitchText:document.getElementById("moreStoreSwitchText"),
+  storeStatusLabel:document.getElementById("moreStoreStatusLabel"),
+  storeProfileSummary:document.getElementById("moreStoreProfileSummary"),
+  notificationsSummary:document.getElementById("moreNotificationsSummary"),
+  accountSummary:document.getElementById("moreAccountSummary"),
+
+  storeProfileButton:document.getElementById("moreStoreProfileButton"),
+  notificationsButton:document.getElementById("moreNotificationsButton"),
+  accountButton:document.getElementById("moreAccountButton"),
+  signOutButton:document.getElementById("moreSignOutButton"),
+
+  storeName:document.getElementById("moreStoreName"),
+  branchName:document.getElementById("moreStoreBranchName"),
+  storeNameError:document.getElementById("moreStoreNameError"),
+  branchError:document.getElementById("moreStoreBranchError"),
+  storeProfileForm:document.getElementById("moreStoreProfileForm"),
+  storeProfileSave:document.getElementById("moreStoreProfileSave"),
+
+  notifyOrders:document.getElementById("moreNotifyOrdersSwitch"),
+  notifySound:document.getElementById("moreNotifySoundSwitch"),
+
+  accountEmail:document.getElementById("moreAccountEmail"),
+  passwordButton:document.getElementById("morePasswordButton"),
+  passwordBack:document.getElementById("morePasswordBack"),
+  passwordForm:document.getElementById("morePasswordForm"),
+  newPassword:document.getElementById("moreNewPassword"),
+  confirmPassword:document.getElementById("moreConfirmPassword"),
+  newPasswordError:document.getElementById("moreNewPasswordError"),
+  confirmPasswordError:document.getElementById("moreConfirmPasswordError"),
+  passwordSave:document.getElementById("morePasswordSave"),
+
+  storeCloseDialog:document.getElementById("moreStoreCloseDialog"),
+  storeCloseCancel:document.getElementById("moreStoreCloseCancel"),
+  storeCloseConfirm:document.getElementById("moreStoreCloseConfirm"),
+
+  signOutDialog:document.getElementById("moreSignOutDialog"),
+  signOutCancel:document.getElementById("moreSignOutCancel"),
+  signOutConfirm:document.getElementById("moreSignOutConfirm"),
+
+  statusMessage:document.getElementById("moreStatusMessage")
+};
+
+function showMoreStatus(text,isError=false){
+  clearTimeout(moreStatusTimer);
+  MS.statusMessage.textContent=text;
+  MS.statusMessage.classList.toggle("is-error",isError);
+  MS.statusMessage.classList.add("is-visible");
+  moreStatusTimer=setTimeout(()=>{
+    MS.statusMessage.classList.remove("is-visible");
+  },2200);
+}
+
+function setMoreSubview(name){
+  const map={
+    main:MS.mainView,
+    store:MS.storeProfileView,
+    notifications:MS.notificationsView,
+    account:MS.accountView,
+    password:MS.passwordView
+  };
+
+  Object.values(map).forEach(view=>view.hidden=true);
+  map[name].hidden=false;
+
+  MS.screen.classList.toggle("more-subview-open",name!=="main");
+}
+
+function applyStoreProfileToOwnerUi(name,branch){
+  moreSettings.store_name=name;
+  moreSettings.branch=branch;
+
+  MS.branch.textContent=`สาขา ${branch}`;
+  MS.storeProfileSummary.textContent=`${name} • สาขา ${branch}`;
+
+  const branchTargets=[
+    document.getElementById("homeBranch"),
+    document.getElementById("ordersBranch"),
+    document.getElementById("menuMgmtBranch"),
+    document.getElementById("financeBranch")
+  ];
+
+  branchTargets.forEach(el=>{
+    if(el)el.textContent=`สาขา ${branch}`;
+  });
+}
+
+function renderMoreSettings(){
+  const accepting=moreSettings.accepting_orders!==false;
+
+  MS.storeSwitch.setAttribute("aria-checked",String(accepting));
+  MS.storeSwitchText.textContent=accepting?"เปิด":"ปิด";
+  MS.storeStatusLabel.textContent=accepting?"เปิดรับออเดอร์":"ปิดรับออเดอร์";
+
+  MS.storeProfileSummary.textContent=
+    `${moreSettings.store_name} • สาขา ${moreSettings.branch}`;
+
+  MS.notifyOrders.setAttribute(
+    "aria-checked",
+    String(moreSettings.notify_new_orders!==false)
+  );
+
+  MS.notifySound.setAttribute(
+    "aria-checked",
+    String(moreSettings.sound_new_orders!==false)
+  );
+
+  const notificationParts=[];
+  if(moreSettings.notify_new_orders!==false)notificationParts.push("ออเดอร์ใหม่");
+  if(moreSettings.sound_new_orders!==false)notificationParts.push("เสียงแจ้งเตือน");
+  MS.notificationsSummary.textContent=
+    notificationParts.length?notificationParts.join(" • "):"ปิดการแจ้งเตือน";
+
+  MS.accountSummary.textContent=moreSettings.email || "—";
+  MS.accountEmail.textContent=moreSettings.email || "—";
+
+  MS.storeName.value=moreSettings.store_name || "";
+  MS.branchName.value=moreSettings.branch || "";
+
+  const newCount=Number(cachedDashboard?.order_counts?.new||0);
+  MS.badge.textContent=newCount>99?"99+":String(newCount);
+  MS.badge.classList.toggle("is-visible",newCount>0);
+}
+
+async function loadMoreSettings(){
+  MS.loading.hidden=false;
+  MS.content.hidden=true;
+  MS.error.classList.remove("is-visible");
+
+  const client=createSupabaseClient();
+  if(!client)throw new Error("CONFIG_MISSING");
+
+  const [
+    storeResult,
+    prefsResult,
+    userResult
+  ]=await Promise.all([
+    client.rpc(CONFIG.STORE_SETTINGS_RPC,{p_store_id:storeId}),
+    client.rpc(CONFIG.OWNER_PREFS_RPC,{p_store_id:storeId}),
+    client.auth.getUser()
+  ]);
+
+  if(storeResult.error)throw storeResult.error;
+  if(prefsResult.error)throw prefsResult.error;
+  if(userResult.error)throw userResult.error;
+
+  const store=Array.isArray(storeResult.data)
+    ? storeResult.data[0]
+    : storeResult.data;
+
+  const prefs=Array.isArray(prefsResult.data)
+    ? prefsResult.data[0]
+    : prefsResult.data;
+
+  moreSettings={
+    ...moreSettings,
+    store_name:
+      store?.store_name ||
+      store?.name ||
+      cachedDashboard?.store?.name ||
+      moreSettings.store_name,
+    branch:
+      store?.branch ||
+      cachedDashboard?.store?.branch ||
+      moreSettings.branch,
+    accepting_orders:
+      store?.accepting_orders!==false,
+    notify_new_orders:
+      prefs?.notify_new_orders!==false,
+    sound_new_orders:
+      prefs?.sound_new_orders!==false,
+    email:
+      userResult.data.user?.email || ""
+  };
+
+  renderMoreSettings();
+
+  MS.loading.hidden=true;
+  MS.content.hidden=false;
+  setMoreSubview("main");
+}
+
+function showMoreLoadError(error){
+  console.error("MORE SETTINGS:",error);
+  MS.loading.hidden=true;
+  MS.content.hidden=true;
+  MS.error.classList.add("is-visible");
+}
+
+async function setStoreAcceptingOrders(next){
+  MS.storeSwitch.disabled=true;
+
+  try{
+    const {data,error}=await supabase.rpc(
+      CONFIG.SET_STORE_ACCEPTING_RPC,
+      {
+        p_store_id:storeId,
+        p_accepting_orders:Boolean(next)
+      }
+    );
+
+    if(error)throw error;
+
+    const result=Array.isArray(data)?data[0]:data;
+    moreSettings.accepting_orders=
+      result?.accepting_orders!==undefined
+        ? result.accepting_orders===true
+        : Boolean(next);
+
+    if(cachedDashboard?.store){
+      cachedDashboard.store.accepting_orders=moreSettings.accepting_orders;
+    }
+
+    renderMoreSettings();
+    setConnection("online",moreSettings.accepting_orders);
+
+    try{await loadDashboard()}catch(_){}
+
+    showMoreStatus(
+      moreSettings.accepting_orders
+        ? "✓ เปิดรับออเดอร์แล้ว"
+        : "✓ ปิดรับออเดอร์แล้ว"
+    );
+  }catch(error){
+    console.error(error);
+    renderMoreSettings();
+    showMoreStatus("บันทึกสถานะร้านไม่สำเร็จ กรุณาลองอีกครั้ง",true);
+  }finally{
+    MS.storeSwitch.disabled=false;
+  }
+}
+
+function validateStoreProfile(){
+  MS.storeNameError.textContent="";
+  MS.branchError.textContent="";
+  let valid=true;
+
+  if(!MS.storeName.value.trim()){
+    MS.storeNameError.textContent="กรุณาระบุชื่อร้าน";
+    valid=false;
+  }
+
+  if(!MS.branchName.value.trim()){
+    MS.branchError.textContent="กรุณาระบุชื่อสาขา";
+    valid=false;
+  }
+
+  return valid;
+}
+
+async function saveStoreProfile(){
+  if(!validateStoreProfile())return;
+
+  const name=MS.storeName.value.trim();
+  const branch=MS.branchName.value.trim();
+
+  MS.storeProfileSave.disabled=true;
+
+  try{
+    const {data,error}=await supabase.rpc(
+      CONFIG.UPDATE_STORE_PROFILE_RPC,
+      {
+        p_store_id:storeId,
+        p_store_name:name,
+        p_branch:branch
+      }
+    );
+
+    if(error)throw error;
+
+    const result=Array.isArray(data)?data[0]:data;
+
+    applyStoreProfileToOwnerUi(
+      result?.store_name || result?.name || name,
+      result?.branch || branch
+    );
+
+    if(cachedDashboard?.store){
+      cachedDashboard.store.name=moreSettings.store_name;
+      cachedDashboard.store.branch=moreSettings.branch;
+    }
+
+    renderMoreSettings();
+    setMoreSubview("main");
+
+    showMoreStatus("✓ บันทึกข้อมูลร้านแล้ว");
+  }catch(error){
+    console.error(error);
+    showMoreStatus("บันทึกข้อมูลร้านไม่สำเร็จ กรุณาลองอีกครั้ง",true);
+  }finally{
+    MS.storeProfileSave.disabled=false;
+  }
+}
+
+async function saveNotificationPrefs(nextNotify,nextSound){
+  MS.notifyOrders.disabled=true;
+  MS.notifySound.disabled=true;
+
+  const previous={
+    notify_new_orders:moreSettings.notify_new_orders,
+    sound_new_orders:moreSettings.sound_new_orders
+  };
+
+  moreSettings.notify_new_orders=Boolean(nextNotify);
+  moreSettings.sound_new_orders=Boolean(nextSound);
+  renderMoreSettings();
+
+  try{
+    const {data,error}=await supabase.rpc(
+      CONFIG.UPDATE_OWNER_PREFS_RPC,
+      {
+        p_store_id:storeId,
+        p_notify_new_orders:Boolean(nextNotify),
+        p_sound_new_orders:Boolean(nextSound)
+      }
+    );
+
+    if(error)throw error;
+
+    const result=Array.isArray(data)?data[0]:data;
+
+    if(result){
+      moreSettings.notify_new_orders=
+        result.notify_new_orders!==false;
+      moreSettings.sound_new_orders=
+        result.sound_new_orders!==false;
+    }
+
+    renderMoreSettings();
+    showMoreStatus("✓ บันทึกการแจ้งเตือนแล้ว");
+  }catch(error){
+    console.error(error);
+    moreSettings.notify_new_orders=previous.notify_new_orders;
+    moreSettings.sound_new_orders=previous.sound_new_orders;
+    renderMoreSettings();
+    showMoreStatus("บันทึกการแจ้งเตือนไม่สำเร็จ กรุณาลองอีกครั้ง",true);
+  }finally{
+    MS.notifyOrders.disabled=false;
+    MS.notifySound.disabled=false;
+  }
+}
+
+function validateNewPassword(){
+  MS.newPasswordError.textContent="";
+  MS.confirmPasswordError.textContent="";
+
+  const password=MS.newPassword.value;
+  const confirm=MS.confirmPassword.value;
+  let valid=true;
+
+  if(password.length<8){
+    MS.newPasswordError.textContent="รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร";
+    valid=false;
+  }
+
+  if(confirm!==password){
+    MS.confirmPasswordError.textContent="รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน";
+    valid=false;
+  }
+
+  return valid;
+}
+
+async function saveNewPassword(){
+  if(!validateNewPassword())return;
+
+  MS.passwordSave.disabled=true;
+
+  try{
+    const {error}=await supabase.auth.updateUser({
+      password:MS.newPassword.value
+    });
+
+    if(error)throw error;
+
+    MS.newPassword.value="";
+    MS.confirmPassword.value="";
+    setMoreSubview("account");
+    showMoreStatus("✓ บันทึกรหัสผ่านใหม่แล้ว");
+  }catch(error){
+    console.error(error);
+    showMoreStatus(
+      error?.message || "เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองอีกครั้ง",
+      true
+    );
+  }finally{
+    MS.passwordSave.disabled=false;
+  }
+}
+
+async function localSignOut(){
+  MS.signOutConfirm.disabled=true;
+
+  try{
+    const {error}=await supabase.auth.signOut({scope:"local"});
+    if(error)throw error;
+
+    MS.signOutDialog.classList.remove("is-visible");
+
+    try{await disconnectRealtime()}catch(_){}
+
+    if(ordersBroadcastChannel){
+      try{await supabase.removeChannel(ordersBroadcastChannel)}catch(_){}
+      ordersBroadcastChannel=null;
+    }
+
+    if(ownerMenuChannel){
+      try{await supabase.removeChannel(ownerMenuChannel)}catch(_){}
+      ownerMenuChannel=null;
+    }
+
+    if(storeSettingsChannel){
+      try{await supabase.removeChannel(storeSettingsChannel)}catch(_){}
+      storeSettingsChannel=null;
+    }
+
+    location.replace("index.html");
+  }catch(error){
+    console.error(error);
+    MS.signOutDialog.classList.remove("is-visible");
+    showMoreStatus("ออกจากระบบไม่สำเร็จ กรุณาลองอีกครั้ง",true);
+  }finally{
+    MS.signOutConfirm.disabled=false;
+  }
+}
+
+async function connectStoreSettingsBroadcast(){
+  if(storeSettingsChannel || !supabase || !storeId)return;
+
+  await supabase.realtime.setAuth();
+
+  storeSettingsChannel=supabase
+    .channel(`${CONFIG.STORE_BROADCAST_TOPIC_PREFIX}:${storeId}`,{
+      config:{private:true}
+    })
+    .on("broadcast",{event:"UPDATE"},async()=>{
+      try{
+        await loadMoreSettings();
+        const accepting=await loadDashboard();
+        setConnection("online",accepting);
+      }catch(error){
+        console.error("Store settings realtime:",error);
+      }
+    })
+    .subscribe((status,err)=>{
+      if(status==="CHANNEL_ERROR" || status==="TIMED_OUT"){
+        console.error("Store settings Broadcast:",status,err);
+      }
+    });
+}
+
+async function openMoreSettings(){
+  if(!supabase || !storeId){
+    await enterHomeFlow();
+    if(!supabase || !storeId)return;
+  }
+
+  showScreen("more");
+  setMoreSubview("main");
+
+  try{
+    await loadMoreSettings();
+    await connectStoreSettingsBroadcast();
+  }catch(error){
+    showMoreLoadError(error);
+  }
+}
+
+MS.storeSwitch.addEventListener("click",()=>{
+  const accepting=
+    MS.storeSwitch.getAttribute("aria-checked")==="true";
+
+  if(accepting){
+    MS.storeCloseDialog.classList.add("is-visible");
+    MS.storeCloseCancel.focus();
+  }else{
+    setStoreAcceptingOrders(true);
+  }
+});
+
+MS.storeCloseCancel.addEventListener("click",()=>{
+  MS.storeCloseDialog.classList.remove("is-visible");
+  MS.storeSwitch.focus();
+});
+
+MS.storeCloseConfirm.addEventListener("click",async()=>{
+  MS.storeCloseDialog.classList.remove("is-visible");
+  await setStoreAcceptingOrders(false);
+});
+
+MS.storeCloseDialog.addEventListener("click",event=>{
+  if(event.target===MS.storeCloseDialog){
+    MS.storeCloseDialog.classList.remove("is-visible");
+    MS.storeSwitch.focus();
+  }
+});
+
+MS.storeProfileButton.addEventListener("click",()=>{
+  renderMoreSettings();
+  setMoreSubview("store");
+});
+
+MS.notificationsButton.addEventListener("click",()=>{
+  renderMoreSettings();
+  setMoreSubview("notifications");
+});
+
+MS.accountButton.addEventListener("click",()=>{
+  renderMoreSettings();
+  setMoreSubview("account");
+});
+
+document.querySelectorAll("[data-more-back]").forEach(button=>{
+  button.addEventListener("click",()=>setMoreSubview("main"));
+});
+
+MS.storeProfileForm.addEventListener("submit",event=>{
+  event.preventDefault();
+  saveStoreProfile();
+});
+
+MS.notifyOrders.addEventListener("click",()=>{
+  const nextNotify=
+    MS.notifyOrders.getAttribute("aria-checked")!=="true";
+
+  saveNotificationPrefs(
+    nextNotify,
+    moreSettings.sound_new_orders!==false
+  );
+});
+
+MS.notifySound.addEventListener("click",()=>{
+  const nextSound=
+    MS.notifySound.getAttribute("aria-checked")!=="true";
+
+  saveNotificationPrefs(
+    moreSettings.notify_new_orders!==false,
+    nextSound
+  );
+});
+
+MS.passwordButton.addEventListener("click",()=>{
+  MS.newPasswordError.textContent="";
+  MS.confirmPasswordError.textContent="";
+  setMoreSubview("password");
+});
+
+MS.passwordBack.addEventListener("click",()=>{
+  setMoreSubview("account");
+});
+
+MS.passwordForm.addEventListener("submit",event=>{
+  event.preventDefault();
+  saveNewPassword();
+});
+
+MS.signOutButton.addEventListener("click",()=>{
+  MS.signOutDialog.classList.add("is-visible");
+  MS.signOutCancel.focus();
+});
+
+MS.signOutCancel.addEventListener("click",()=>{
+  MS.signOutDialog.classList.remove("is-visible");
+  MS.signOutButton.focus();
+});
+
+MS.signOutConfirm.addEventListener("click",localSignOut);
+
+MS.signOutDialog.addEventListener("click",event=>{
+  if(event.target===MS.signOutDialog){
+    MS.signOutDialog.classList.remove("is-visible");
+    MS.signOutButton.focus();
+  }
+});
+
+MS.retry.addEventListener("click",()=>{
+  loadMoreSettings().catch(showMoreLoadError);
+});
+
+
+document.querySelectorAll("[data-action]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    const action=button.dataset.action;
+    if(action==="home") location.href="screen03.html";
+    else if(action==="orders-all") location.href="screen04.html";
+    else if(action==="menu") location.href="screen06.html";
+    else if(action==="finance") location.href="screen08.html";
+    else if(action==="more") window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+
+
+
+(async()=>{
+  if(!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_PUBLISHABLE_KEY){
+    showMoreLoadError(new Error("CONFIG_MISSING"));
+    return;
+  }
+
+  try{
+    const client=createSupabaseClient();
+
+    const {data:u,error:ue}=await client.auth.getUser();
+    if(ue || !u?.user?.id){
+      location.replace("index.html");
+      return;
+    }
+
+    const {data:membership,error:membershipError}=await client
+      .from("store_members")
+      .select("store_id,role,is_active")
+      .eq("store_id",CONFIG.STORE_ID)
+      .eq("user_id",u.user.id)
+      .eq("role","owner")
+      .eq("is_active",true)
+      .maybeSingle();
+
+    if(membershipError)throw membershipError;
+
+    if(!membership){
+      await client.auth.signOut({scope:"local"});
+      location.replace("index.html");
+      return;
+    }
+
+    storeId=String(membership.store_id);
+    await loadMoreSettings();
+    await connectStoreSettingsBroadcast();
+  }catch(error){
+    showMoreLoadError(error);
+  }
+})();
+</script>
+</body>
+</html>
